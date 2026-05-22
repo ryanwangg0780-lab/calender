@@ -55,6 +55,10 @@ function readableDate(date) {
   });
 }
 
+function isPastDate(date) {
+  return dateKey(date) < dateKey(today);
+}
+
 function renderCalendar() {
   calendarGrid.innerHTML = "";
 
@@ -79,6 +83,7 @@ function renderCalendar() {
     const hasImportantNote = dayNotes.some((note) => note.important);
     const isToday = key === dateKey(today);
     const isSelected = key === dateKey(selectedDate);
+    const isLate = dayNotes.length > 0 && isPastDate(date);
 
     const cell = document.createElement("button");
     cell.type = "button";
@@ -97,6 +102,10 @@ function renderCalendar() {
       cell.classList.add("selected");
     }
 
+    if (isLate) {
+      cell.classList.add("late");
+    }
+
     const number = document.createElement("span");
     number.className = "day-number";
     number.textContent = day;
@@ -111,6 +120,13 @@ function renderCalendar() {
       preview.className = "day-preview";
       preview.textContent = dayNotes[0].text;
       cell.appendChild(preview);
+
+      if (isLate) {
+        const lateLabel = document.createElement("span");
+        lateLabel.className = "late-label";
+        lateLabel.textContent = "Project is late!";
+        cell.appendChild(lateLabel);
+      }
     }
 
     cell.addEventListener("click", () => {
@@ -127,10 +143,13 @@ function renderCalendar() {
 function renderSelectedDay() {
   const key = dateKey(selectedDate);
   const dayNotes = notes[key] || [];
+  const selectedDayIsLate = dayNotes.length > 0 && isPastDate(selectedDate);
 
   selectedDateTitle.textContent = readableDate(selectedDate);
   selectedDateHint.textContent = dayNotes.length
-    ? `${dayNotes.length} note${dayNotes.length === 1 ? "" : "s"} saved for this day.`
+    ? selectedDayIsLate
+      ? `Project is late! ${dayNotes.length} note${dayNotes.length === 1 ? "" : "s"} saved for this day.`
+      : `${dayNotes.length} note${dayNotes.length === 1 ? "" : "s"} saved for this day.`
     : "No notes yet. Add one below.";
   noteText.value = "";
   importantNote.checked = false;
@@ -150,8 +169,17 @@ function renderSelectedDay() {
       item.classList.add("important-note");
     }
 
+    if (selectedDayIsLate) {
+      item.classList.add("late-note");
+    }
+
     const text = document.createElement("span");
-    text.textContent = note.important ? `Important: ${note.text}` : note.text;
+    const notePrefix = selectedDayIsLate
+      ? "Project is late! "
+      : note.important
+        ? "Important: "
+        : "";
+    text.textContent = `${notePrefix}${note.text}`;
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
