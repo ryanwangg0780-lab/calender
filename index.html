@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shiny Calendar Notes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="todayAlert" class="today-alert" aria-live="assertive" hidden>
+    <div class="alert-box">
+      <p class="alert-kicker">Today is important</p>
+      <h2>You need to do:</h2>
+      <ul id="todayAlertList"></ul>
+      <button id="closeAlert" type="button">I got it</button>
+    </div>
+  </div>
+
+  <main class="app-shell">
+    <section class="calendar-panel" aria-label="Calendar planner">
+      <header class="top-bar">
+        <div>
+          <p class="eyebrow">Bright day planner</p>
+          <h1>Calendar Notes</h1>
+        </div>
+        <div class="month-controls" aria-label="Month controls">
+          <button id="prevMonth" type="button" aria-label="Previous month">&lt;</button>
+          <div>
+            <p id="monthName" class="month-name"></p>
+            <p id="yearName" class="year-name"></p>
+          </div>
+          <button id="nextMonth" type="button" aria-label="Next month">&gt;</button>
+        </div>
+      </header>
+
+      <div class="weekday-row" aria-hidden="true">
+        <span>Sun</span>
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+      </div>
+
+      <div id="calendarGrid" class="calendar-grid"></div>
+    </section>
+
+    <aside class="note-panel" aria-label="Selected day notes">
+      <p class="eyebrow">Selected day</p>
+      <h2 id="selectedDateTitle">Choose a day</h2>
+      <p id="selectedDateHint" class="hint">Pick any day in the year and write what you need to do.</p>
+
+      <form id="noteForm" class="note-form">
+        <label for="noteText">What do you need to do?</label>
+        <textarea id="noteText" rows="5" placeholder="Example: Finish science project"></textarea>
+
+        <label class="important-toggle">
+          <input id="importantNote" type="checkbox">
+          <span>Mark this day important</span>
+        </label>
+
+        <button type="submit">Save note</button>
+      </form>
+
+      <div class="saved-area">
+        <h3>Notes for this day</h3>
+        <ul id="noteList" class="note-list"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
